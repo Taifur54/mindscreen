@@ -496,13 +496,13 @@ function showSection(id){
 }
 
 function goHome(){
-  history.pushState({page:'landing'},'','#home');
+  window.location.hash = '#home';
   showSection('landing');
   document.getElementById('paywall').style.display='flex';
 }
 
 function goToModeSelect(){
-  history.pushState({page:'mode-select'},'','#choose');
+  window.location.hash = '#choose';
   showSection('mode-select');
 }
 
@@ -510,7 +510,7 @@ function startGeneral(){
   mode='general'; activePrice='$4.99'; activeSecs=GS;
   totalQ=GS.reduce(function(a,s){return a+s.qs.length;},0);
   secScores={}; allAns={}; curSecIdx=0; curQ=0; gIdx=0;
-  history.pushState({page:'quiz'},'','#screening');
+  window.location.hash = '#screening';
   showTrans(0);
 }
 
@@ -520,7 +520,7 @@ function startDeep(id){
   activeSecs=[d]; totalQ=d.qs.length;
   secScores={}; allAns={}; curSecIdx=0; curQ=0; gIdx=0;
   document.getElementById('pw-price').textContent='$7.99';
-  history.pushState({page:'quiz'},'','#screening');
+  window.location.hash = '#screening';
   showTrans(0);
 }
 
@@ -595,7 +595,7 @@ function getSummary(results){
 }
 
 function showResults(){
-  history.pushState({page:'results'},'','#results');
+  window.location.hash = '#results';
   showSection('results');
   document.getElementById('paywall').style.display='flex';
   document.getElementById('pw-price').textContent=activePrice;
@@ -794,21 +794,46 @@ function downloadPDF(){
 function handlePayment(){ alert('Paddle integration coming soon. Use preview mode to test.'); }
 function revealResults(){ document.getElementById('paywall').style.display='none'; }
 
-// Handle browser back/forward
-window.addEventListener('popstate', function(e){
-  var state = e.state;
-  if(!state || state.page==='landing'){ goHome(); return; }
-  if(state.page==='mode-select'){ showSection('mode-select'); return; }
-  if(state.page==='quiz'){
-    if(activeSecs.length) showTrans(curSecIdx);
-    else { showSection('mode-select'); }
-    return;
+// Handle browser back/forward via hashchange
+window.addEventListener('hashchange', function(){
+  var hash = window.location.hash;
+  if(hash==='' || hash==='#home'){ 
+    allSections.forEach(function(s){ document.getElementById(s).style.display='none'; });
+    document.getElementById('landing').style.display='flex';
+    document.getElementById('paywall').style.display='flex';
+    window.scrollTo(0,0);
+    return; 
   }
-  if(state.page==='results'){ showSection('results'); return; }
+  if(hash==='#choose'){ 
+    allSections.forEach(function(s){ document.getElementById(s).style.display='none'; });
+    document.getElementById('mode-select').style.display='block';
+    window.scrollTo(0,0);
+    return; 
+  }
+  if(hash==='#screening'){ 
+    if(activeSecs.length){ 
+      allSections.forEach(function(s){ document.getElementById(s).style.display='none'; });
+      document.getElementById('section-transition').style.display='flex';
+      window.scrollTo(0,0);
+    } else { 
+      window.location.hash='#choose'; 
+    }
+    return; 
+  }
+  if(hash==='#results'){ 
+    if(activeSecs.length){ 
+      allSections.forEach(function(s){ document.getElementById(s).style.display='none'; });
+      document.getElementById('results').style.display='block';
+      window.scrollTo(0,0);
+    } else { 
+      window.location.hash='#home'; 
+    }
+    return; 
+  }
 });
 
 // Set initial state
-history.replaceState({page:'landing'},'','#home');
+window.location.hash = '#home';
 
 buildDeepCards();
 </script>
