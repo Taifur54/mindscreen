@@ -132,9 +132,17 @@
   .test-btn:hover { color:rgba(232,234,240,0.5); border-color:rgba(232,234,240,0.25); }
   .pw-foot { font-family:'IBM Plex Mono',monospace; font-size:10px; color:var(--muted); opacity:0.5; letter-spacing:0.08em; }
   @keyframes fadeUp { from { opacity:0; transform:translateY(22px); } to { opacity:1; transform:none; } }
+
+  /* FIXED NAV LOGO */
+  .nav-logo { position:absolute; top:18px; left:24px; z-index:200; font-family:'Syne',sans-serif; font-size:17px; font-weight:800; background:linear-gradient(135deg,var(--accent),var(--accent2)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; cursor:pointer; letter-spacing:0.01em; text-decoration:none; opacity:0.9; transition:opacity 0.2s; }
+  .nav-logo:hover { opacity:1; }
+  #landing .nav-logo { display:none; }
 </style>
 </head>
 <body>
+
+<!-- FIXED NAV LOGO -->
+<span class="nav-logo" onclick="goHome()">MindScreen™</span>
 
 <!-- LANDING -->
 <section id="landing">
@@ -200,7 +208,7 @@
 <!-- QUESTIONNAIRE -->
 <section id="questionnaire">
   <div class="q-header">
-    <div class="q-logo">MindScreen™</div>
+    <div class="q-logo" onclick="goHome()" style="cursor:pointer;">MindScreen™</div>
     <div class="q-prog-wrap">
       <div class="q-prog-label"><span id="q-lbl">Q 1</span><span id="q-pct">0%</span></div>
       <div class="q-prog-bar"><div class="q-prog-fill" id="q-fill"></div></div>
@@ -472,6 +480,15 @@ function buildDeepCards(){
     c.onclick=function(){startDeep(d.id);};
     g.appendChild(c);
   });
+}
+
+function goHome(){
+  ['mode-select','section-transition','questionnaire','results'].forEach(function(id){
+    document.getElementById(id).style.display='none';
+  });
+  document.getElementById('paywall').style.display='flex';
+  document.getElementById('landing').style.display='flex';
+  window.scrollTo(0,0);
 }
 
 function goToModeSelect(){ document.getElementById('landing').style.display='none'; document.getElementById('mode-select').style.display='block'; }
