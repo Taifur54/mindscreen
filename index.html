@@ -253,22 +253,28 @@
     <div class="pw-card">
       <span class="pw-icon">🔒</span>
       <h2>Your report is ready.</h2>
-      <p style="font-family:'IBM Plex Sans',sans-serif;font-size:13px;color:#9aa0b8;line-height:1.7;margin-bottom:20px;">Your screening results have been scored using clinically validated instruments.</p>
 
-      <div style="background:rgba(79,142,247,0.06);border:1px solid rgba(79,142,247,0.2);padding:18px 22px;margin-bottom:24px;text-align:left;">
-        <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:var(--accent);margin-bottom:12px;">📄 What you get</div>
-        <p style="font-family:'IBM Plex Sans',sans-serif;font-size:13px;color:#c8cdd8;line-height:1.75;margin-bottom:12px;">
-          Your full report includes <strong style="color:var(--text);">every question you answered alongside your response</strong> — formatted as a clinical summary you can hand directly to a doctor or therapist.
-        </p>
-        <p style="font-family:'IBM Plex Sans',sans-serif;font-size:13px;color:#c8cdd8;line-height:1.75;">
-          Walk into your first session already pre-screened. Skip the intake guesswork. <strong style="color:var(--text);">A single therapy session costs $150–$300.</strong> This report can cut your diagnosis time from months to one conversation.
-        </p>
+      <div style="text-align:left;margin-bottom:20px;">
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:var(--accent);margin-bottom:12px;">📄 Download your PDF report and get:</div>
+        <ul style="font-family:'IBM Plex Sans',sans-serif;font-size:13px;color:#c8cdd8;line-height:1.8;padding-left:18px;margin-bottom:16px;">
+          <li>Every question you were asked, with your exact answer recorded</li>
+          <li>A formatted clinical summary ready to hand to your doctor or therapist</li>
+          <li>Condition scores with severity levels across all 7 areas</li>
+        </ul>
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:var(--accent2);margin-bottom:12px;">Why it's worth it:</div>
+        <ul style="font-family:'IBM Plex Sans',sans-serif;font-size:13px;color:#c8cdd8;line-height:1.8;padding-left:18px;">
+          <li>Questions validated by US government psychologists and used in clinical practice worldwide</li>
+          <li>A single therapy session costs $150–$300</li>
+          <li>Most people spend the entire first session just explaining symptoms</li>
+          <li>Download your PDF and walk in ready — cut diagnosis time from months to one conversation</li>
+        </ul>
       </div>
 
       <div class="pw-price" id="pw-price">$7.99</div>
       <div class="pw-note">ONE-TIME · INSTANT PDF REPORT · NO SUBSCRIPTION</div>
-      <button class="pay-btn" onclick="handlePayment()">Unlock My Full Report →</button>
-      <button class="test-btn" onclick="revealResults()">[ Preview — testing mode ]</button>
+      <button class="pay-btn" onclick="handlePayment()">Unlock & Download My PDF Report →</button>
+      <button class="test-btn" onclick="revealResults()">[ Preview results — testing mode ]</button>
+      <button class="test-btn" onclick="revealResults();setTimeout(downloadPDF,300);" style="margin-top:4px;color:rgba(232,234,240,0.4);border-color:rgba(232,234,240,0.15);">[ Test PDF download ]</button>
       <div class="pw-foot">Secure checkout via Paddle · Results never stored</div>
     </div>
   </div>
