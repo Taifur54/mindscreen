@@ -23,20 +23,20 @@
   .cta-btn { background:linear-gradient(135deg,var(--accent),var(--accent2)); color:white; border:none; font-family:'Syne',sans-serif; font-size:16px; font-weight:700; padding:18px 52px; cursor:pointer; letter-spacing:0.04em; transition:all 0.2s; position:relative; z-index:1; }
   .cta-btn:hover { opacity:0.85; transform:translateY(-2px); }
   .disclaimer-block { background:var(--surface); border:1px solid var(--border); border-left:3px solid var(--accent); padding:16px 22px; max-width:560px; margin-bottom:36px; position:relative; z-index:1; }
-  .disclaimer-block p { font-family:'IBM Plex Mono',monospace; font-size:11px; line-height:1.9; color:var(--muted); }
-  .disclaimer-block strong { color:var(--accent); font-weight:500; }
+  .disclaimer-block p { font-family:'IBM Plex Sans',sans-serif; font-size:13px; line-height:1.8; color:#9aa0b8; }
+  .disclaimer-block strong { color:var(--accent); font-weight:600; }
 
   /* LANDING */
   #landing { min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:60px 24px; position:relative; overflow:hidden; text-align:center; }
   #landing h1 { font-family:'Syne',sans-serif; font-size:clamp(36px,6vw,80px); font-weight:800; line-height:1.0; max-width:860px; position:relative; z-index:1; animation:fadeUp 0.6s 0.1s ease both; margin-bottom:20px; }
-  #landing p.sub { font-family:'IBM Plex Mono',monospace; font-size:13px; color:var(--muted); max-width:500px; line-height:1.9; margin-bottom:36px; position:relative; z-index:1; animation:fadeUp 0.6s 0.15s ease both; }
+  #landing p.sub { font-family:'IBM Plex Sans',sans-serif; font-size:15px; color:#9aa0b8; max-width:520px; line-height:1.8; margin-bottom:36px; position:relative; z-index:1; animation:fadeUp 0.6s 0.15s ease both; }
 
   /* MODE SELECT */
   #mode-select { display:none; min-height:100vh; padding:60px 24px; }
   .mode-inner { max-width:920px; margin:0 auto; }
   .mode-header { text-align:center; margin-bottom:52px; }
   .mode-header h2 { font-family:'Syne',sans-serif; font-size:clamp(26px,4vw,46px); font-weight:800; margin-bottom:12px; }
-  .mode-header p { font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--muted); line-height:1.8; }
+  .mode-header p { font-family:'IBM Plex Sans',sans-serif; font-size:14px; color:#9aa0b8; line-height:1.8; }
   .section-label { font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:0.2em; text-transform:uppercase; color:var(--muted); margin-bottom:16px; }
 
   .general-card { background:var(--card); border:1.5px solid var(--accent); padding:32px 36px; margin-bottom:40px; cursor:pointer; transition:all 0.2s; position:relative; overflow:hidden; }
@@ -45,9 +45,9 @@
   .gc-top { display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:12px; gap:16px; }
   .gc-title { font-family:'Syne',sans-serif; font-size:22px; font-weight:800; }
   .gc-badge-wrap { text-align:right; flex-shrink:0; }
-  .gc-desc { font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--muted); line-height:1.8; margin-bottom:20px; }
+  .gc-desc { font-family:'IBM Plex Sans',sans-serif; font-size:14px; color:#9aa0b8; line-height:1.8; margin-bottom:20px; }
   .pills { display:flex; flex-wrap:wrap; gap:8px; }
-  .pill { font-family:'IBM Plex Mono',monospace; font-size:10px; padding:4px 10px; border:1px solid var(--border); color:var(--muted); background:var(--surface); }
+  .pill { font-family:'IBM Plex Sans',sans-serif; font-size:11px; padding:4px 10px; border:1px solid var(--border); color:#7a8099; background:var(--surface); }
 
   .deep-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:14px; }
   .deep-card { background:var(--card); border:1.5px solid var(--border); padding:24px; cursor:pointer; transition:all 0.2s; }
@@ -55,14 +55,14 @@
   .dc-icon { font-size:28px; margin-bottom:12px; display:block; }
   .dc-title { font-family:'Syne',sans-serif; font-size:17px; font-weight:700; margin-bottom:6px; }
   .dc-source { font-family:'IBM Plex Mono',monospace; font-size:10px; color:var(--muted); letter-spacing:0.08em; margin-bottom:10px; }
-  .dc-desc { font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--muted); line-height:1.7; margin-bottom:14px; }
+  .dc-desc { font-family:'IBM Plex Sans',sans-serif; font-size:13px; color:#9aa0b8; line-height:1.75; margin-bottom:14px; }
   .dc-bottom { display:flex; align-items:center; justify-content:flex-end; }
-  .dc-qs { font-family:'IBM Plex Mono',monospace; font-size:10px; color:var(--muted); }
+  .dc-qs { font-family:'IBM Plex Sans',sans-serif; font-size:12px; color:var(--muted); }
 
   /* SECTION TRANSITION */
   #section-transition { display:none; min-height:100vh; background:var(--surface); align-items:center; justify-content:center; flex-direction:column; text-align:center; padding:40px; }
   #section-transition h2 { font-family:'Syne',sans-serif; font-size:clamp(26px,5vw,52px); font-weight:800; margin-bottom:14px; }
-  #section-transition p { font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--muted); line-height:1.9; margin-bottom:40px; max-width:420px; white-space:pre-line; }
+  #section-transition p { font-family:'IBM Plex Sans',sans-serif; font-size:14px; color:#9aa0b8; line-height:1.8; margin-bottom:40px; max-width:420px; white-space:pre-line; }
   .st-icon { font-size:48px; margin-bottom:24px; }
 
   /* QUESTIONNAIRE */
@@ -75,14 +75,14 @@
   .q-prog-bar { height:3px; background:var(--border); border-radius:2px; overflow:hidden; }
   .q-prog-fill { height:100%; background:linear-gradient(90deg,var(--accent),var(--accent2)); transition:width 0.4s ease; width:0%; }
   .q-body { max-width:700px; margin:0 auto; padding:56px 24px; }
-  .q-hint { font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--muted); margin-bottom:10px; }
+  .q-hint { font-family:'IBM Plex Sans',sans-serif; font-size:13px; color:#9aa0b8; margin-bottom:10px; }
   .q-cat { font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:0.2em; text-transform:uppercase; color:var(--accent); margin-bottom:10px; }
   .q-text { font-family:'Syne',sans-serif; font-size:clamp(20px,3.5vw,30px); font-weight:700; line-height:1.3; margin-bottom:8px; opacity:0; transform:translateY(18px); transition:all 0.4s ease; }
-  .q-sub { font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--muted); margin-bottom:36px; opacity:0; transition:all 0.4s 0.05s ease; transform:translateY(10px); }
+  .q-sub { font-family:'IBM Plex Sans',sans-serif; font-size:13px; color:#9aa0b8; margin-bottom:36px; opacity:0; transition:all 0.4s 0.05s ease; transform:translateY(10px); }
   .q-text.vis, .q-sub.vis { opacity:1; transform:none; }
   .opts { display:grid; gap:10px; opacity:0; transition:all 0.4s 0.1s ease; transform:translateY(14px); }
   .opts.vis { opacity:1; transform:none; }
-  .opt { background:var(--card); border:1.5px solid var(--border); padding:16px 20px; text-align:left; cursor:pointer; font-family:'IBM Plex Sans',sans-serif; font-size:14px; color:var(--text); transition:all 0.15s; display:flex; align-items:center; gap:14px; }
+  .opt { background:var(--card); border:1.5px solid var(--border); padding:16px 20px; text-align:left; cursor:pointer; font-family:'IBM Plex Sans',sans-serif; font-size:15px; color:var(--text); transition:all 0.15s; display:flex; align-items:center; gap:14px; }
   .opt:hover { border-color:var(--accent); background:rgba(79,142,247,0.05); }
   .opt.sel { border-color:var(--accent); background:rgba(79,142,247,0.08); }
   .opt-ltr { font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--muted); min-width:18px; }
@@ -115,7 +115,7 @@
   .sum-text { font-family:'Syne',sans-serif; font-size:clamp(16px,2.5vw,22px); font-weight:600; line-height:1.5; }
   .insights-sec { margin-bottom:32px; }
   .insights-sec h3 { font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.15em; text-transform:uppercase; color:var(--accent2); margin-bottom:16px; }
-  .ins-item { display:flex; gap:16px; padding:14px 0; border-bottom:1px solid var(--border); font-size:14px; line-height:1.6; }
+  .ins-item { display:flex; gap:16px; padding:14px 0; border-bottom:1px solid var(--border); font-family:'IBM Plex Sans',sans-serif; font-size:14px; line-height:1.75; color:#c8cdd8; }
   .ins-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; margin-top:6px; }
 
   /* PAYWALL */
@@ -124,7 +124,7 @@
   .pw-card::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; background:linear-gradient(90deg,var(--accent),var(--accent2)); }
   .pw-icon { font-size:32px; margin-bottom:20px; display:block; }
   .pw-card h2 { font-family:'Syne',sans-serif; font-size:26px; font-weight:800; margin-bottom:12px; }
-  .pw-card p { font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--muted); line-height:1.9; margin-bottom:28px; }
+  .pw-card p { font-family:'IBM Plex Sans',sans-serif; font-size:14px; color:#9aa0b8; line-height:1.75; margin-bottom:20px; }
   .pw-price { font-family:'Syne',sans-serif; font-size:52px; font-weight:800; background:linear-gradient(135deg,var(--accent),var(--accent2)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
   .pw-note { font-family:'IBM Plex Mono',monospace; font-size:10px; color:var(--muted); letter-spacing:0.12em; margin-bottom:28px; margin-top:4px; }
   .pay-btn { background:linear-gradient(135deg,var(--accent),var(--accent2)); color:white; border:none; padding:16px 40px; font-family:'Syne',sans-serif; font-size:15px; font-weight:700; cursor:pointer; width:100%; transition:opacity 0.2s; margin-bottom:10px; }
@@ -253,17 +253,19 @@
     <div class="pw-card">
       <span class="pw-icon">🔒</span>
       <h2>Your report is ready.</h2>
-      <p>Your screening results have been scored using clinically validated instruments.</p>
+      <p style="font-family:'IBM Plex Sans',sans-serif;font-size:13px;color:#9aa0b8;line-height:1.7;margin-bottom:20px;">Your screening results have been scored using clinically validated instruments.</p>
 
-      <div style="background:rgba(79,142,247,0.06);border:1px solid rgba(79,142,247,0.2);padding:16px 20px;margin-bottom:24px;text-align:left;">
-        <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:var(--accent);margin-bottom:10px;">📄 What you get</div>
-        <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--muted);line-height:1.9;">
-          Your full report includes <strong style="color:var(--text);">every question you answered alongside your response</strong> — formatted as a clinical summary you can hand directly to a doctor or therapist.<br><br>
+      <div style="background:rgba(79,142,247,0.06);border:1px solid rgba(79,142,247,0.2);padding:18px 22px;margin-bottom:24px;text-align:left;">
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:var(--accent);margin-bottom:12px;">📄 What you get</div>
+        <p style="font-family:'IBM Plex Sans',sans-serif;font-size:13px;color:#c8cdd8;line-height:1.75;margin-bottom:12px;">
+          Your full report includes <strong style="color:var(--text);">every question you answered alongside your response</strong> — formatted as a clinical summary you can hand directly to a doctor or therapist.
+        </p>
+        <p style="font-family:'IBM Plex Sans',sans-serif;font-size:13px;color:#c8cdd8;line-height:1.75;">
           Walk into your first session already pre-screened. Skip the intake guesswork. <strong style="color:var(--text);">A single therapy session costs $150–$300.</strong> This report can cut your diagnosis time from months to one conversation.
-        </div>
+        </p>
       </div>
 
-      <div class="pw-price" id="pw-price">$4.99</div>
+      <div class="pw-price" id="pw-price">$7.99</div>
       <div class="pw-note">ONE-TIME · INSTANT PDF REPORT · NO SUBSCRIPTION</div>
       <button class="pay-btn" onclick="handlePayment()">Unlock My Full Report →</button>
       <button class="test-btn" onclick="revealResults()">[ Preview — testing mode ]</button>
@@ -507,7 +509,7 @@ function goToModeSelect(){
 }
 
 function startGeneral(){
-  mode='general'; activePrice='$4.99'; activeSecs=GS;
+  mode='general'; activePrice='$7.99'; activeSecs=GS;
   totalQ=GS.reduce(function(a,s){return a+s.qs.length;},0);
   secScores={}; allAns={}; curSecIdx=0; curQ=0; gIdx=0;
   window.location.hash = '#screening';
@@ -515,11 +517,11 @@ function startGeneral(){
 }
 
 function startDeep(id){
-  mode=id; activePrice='$7.99';
+  mode=id; activePrice='$4.99';
   var d=DD.find(function(x){return x.id===id;});
   activeSecs=[d]; totalQ=d.qs.length;
   secScores={}; allAns={}; curSecIdx=0; curQ=0; gIdx=0;
-  document.getElementById('pw-price').textContent='$7.99';
+  document.getElementById('pw-price').textContent='$4.99';
   window.location.hash = '#screening';
   showTrans(0);
 }
