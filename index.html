@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MindScreen — Mental Health Screening</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=IBM+Plex+Mono:wght@300;400;500&family=IBM+Plex+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0D0F14;
+    --surface: #13161E;
+    --card: #1A1E28;
+    --border: #252A38;
+    --text: #E8EAF0;
+    --muted: #5A6080;
+    --accent: #4F8EF7;
+    --accent2: #7C5CE8;
+    --green: #2DD4A0;
+    --yellow: #F5C842;
+    --red: #F05A5A;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:var(--bg); color:var(--text); font-family:'IBM Plex Sans',sans-serif; min-height:100vh; overflow-x:hidden; }
+
+  /* LANDING */
+  #landing { min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:60px 24px; position:relative; overflow:hidden; }
+  .glow { position:absolute; width:500px; height:500px; border-radius:50%; filter:blur(120px); opacity:0.1; pointer-events:none; }
+  .glow-1 { background:var(--accent); top:-150px; left:-150px; }
+  .glow-2 { background:var(--accent2); bottom:-150px; right:-150px; }
+  .chip { font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:0.2em; text-transform:uppercase; color:var(--accent); border:1px solid rgba(79,142,247,0.3); background:rgba(79,142,247,0.06); padding:6px 16px; margin-bottom:32px; position:relative; z-index:1; animation:fadeUp 0.5s ease both; }
+  .landing-headline { font-family:'Syne',sans-serif; font-size:clamp(38px,7vw,84px); font-weight:800; line-height:1.0; text-align:center; max-width:860px; position:relative; z-index:1; animation:fadeUp 0.6s 0.1s ease both; }
+  .grad { background:linear-gradient(135deg,var(--accent),var(--accent2)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+  .landing-sub { font-family:'IBM Plex Mono',monospace; font-size:13px; color:var(--muted); text-align:center; max-width:520px; line-height:1.9; margin:20px 0 36px; position:relative; z-index:1; animation:fadeUp 0.6s 0.15s ease both; }
+  .tags { display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin-bottom:36px; position:relative; z-index:1; animation:fadeUp 0.6s 0.2s ease both; }
+  .tag { font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:0.08em; padding:5px 12px; border:1px solid var(--border); color:var(--muted); background:var(--surface); }
+  .disclaimer-block { background:var(--surface); border:1px solid var(--border); border-left:3px solid var(--accent); padding:18px 24px; max-width:560px; margin-bottom:36px; position:relative; z-index:1; animation:fadeUp 0.6s 0.25s ease both; }
+  .disclaimer-block p { font-family:'IBM Plex Mono',monospace; font-size:11px; line-height:1.9; color:var(--muted); }
+  .disclaimer-block strong { color:var(--accent); font-weight:500; }
+  .cta-btn { position:relative; z-index:1; background:linear-gradient(135deg,var(--accent),var(--accent2)); color:white; border:none; font-family:'Syne',sans-serif; font-size:16px; font-weight:700; padding:18px 56px; cursor:pointer; letter-spacing:0.04em; transition:all 0.2s; animation:fadeUp 0.6s 0.3s ease both; margin-bottom:14px; }
+  .cta-btn:hover { opacity:0.85; transform:translateY(-2px); }
+  .sub-note { font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--muted); letter-spacing:0.08em; position:relative; z-index:1; animation:fadeUp 0.6s 0.35s ease both; }
+
+  /* QUESTIONNAIRE */
+  #questionnaire { display:none; min-height:100vh; }
+  .q-header { background:var(--surface); border-bottom:1px solid var(--border); padding:16px 40px; display:flex; align-items:center; justify-content:space-between; position:sticky; top:0; z-index:50; }
+  .q-logo { font-family:'Syne',sans-serif; font-size:18px; font-weight:800; background:linear-gradient(135deg,var(--accent),var(--accent2)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+  .q-section-label { font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--accent); letter-spacing:0.1em; }
+  .q-progress-wrap { flex:1; max-width:260px; margin:0 32px; }
+  .q-progress-label { font-family:'IBM Plex Mono',monospace; font-size:10px; color:var(--muted); margin-bottom:6px; display:flex; justify-content:space-between; }
+  .q-progress-bar { height:3px; background:var(--border); border-radius:2px; overflow:hidden; }
+  .q-progress-fill { height:100%; background:linear-gradient(90deg,var(--accent),var(--accent2)); transition:width 0.4s ease; width:0%; }
+  .q-body { max-width:700px; margin:0 auto; padding:56px 24px; }
+  .q-scale-hint { font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--muted); margin-bottom:10px; letter-spacing:0.05em; }
+  .q-category { font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:0.2em; text-transform:uppercase; color:var(--accent); margin-bottom:10px; }
+  .q-question { font-family:'Syne',sans-serif; font-size:clamp(20px,3.5vw,30px); font-weight:700; line-height:1.3; margin-bottom:8px; opacity:0; transform:translateY(18px); transition:all 0.4s ease; }
+  .q-subtext { font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--muted); margin-bottom:36px; opacity:0; transition:all 0.4s 0.05s ease; transform:translateY(10px); }
+  .q-question.visible, .q-subtext.visible { opacity:1; transform:none; }
+  .options-grid { display:grid; gap:10px; opacity:0; transition:all 0.4s 0.1s ease; transform:translateY(14px); }
+  .options-grid.visible { opacity:1; transform:none; }
+  .option-btn { background:var(--card); border:1.5px solid var(--border); padding:16px 20px; text-align:left; cursor:pointer; font-family:'IBM Plex Sans',sans-serif; font-size:14px; color:var(--text); transition:all 0.15s; display:flex; align-items:center; gap:14px; }
+  .option-btn:hover { border-color:var(--accent); background:rgba(79,142,247,0.05); }
+  .option-btn.selected { border-color:var(--accent); background:rgba(79,142,247,0.08); }
+  .option-letter { font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--muted); min-width:18px; }
+  .option-btn.selected .option-letter { color:var(--accent); }
+
+  /* SECTION TRANSITION */
+  #section-transition { display:none; min-height:100vh; background:var(--surface); align-items:center; justify-content:center; flex-direction:column; text-align:center; padding:40px; }
+  #section-transition h2 { font-family:'Syne',sans-serif; font-size:clamp(28px,5vw,56px); font-weight:800; margin-bottom:16px; }
+  #section-transition p { font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--muted); line-height:1.9; margin-bottom:40px; max-width:420px; }
+  .section-icon { font-size:48px; margin-bottom:24px; }
+
+  /* RESULTS */
+  #results { display:none; min-height:100vh; padding:60px 24px; position:relative; }
+  .results-inner { max-width:820px; margin:0 auto; }
+  .results-header { text-align:center; margin-bottom:52px; }
+  .results-title { font-family:'Syne',sans-serif; font-size:clamp(26px,4vw,48px); font-weight:800; margin-top:16px; }
+  .report-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:16px; margin-bottom:36px; }
+  .report-card { background:var(--card); border:1px solid var(--border); padding:22px; position:relative; overflow:hidden; }
+  .report-card::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; }
+  .report-card.low::before { background:var(--green); }
+  .report-card.moderate::before { background:var(--yellow); }
+  .report-card.high::before { background:var(--red); }
+  .report-card-label { font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:0.15em; text-transform:uppercase; color:var(--muted); margin-bottom:10px; }
+  .report-card-score { font-family:'Syne',sans-serif; font-size:32px; font-weight:800; margin-bottom:4px; }
+  .report-card-level { font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.1em; }
+  .report-card.low .report-card-score, .report-card.low .report-card-level { color:var(--green); }
+  .report-card.moderate .report-card-score, .report-card.moderate .report-card-level { color:var(--yellow); }
+  .report-card.high .report-card-score, .report-card.high .report-card-level { color:var(--red); }
+  .report-card-bar { height:3px; background:var(--border); margin-top:14px; overflow:hidden; border-radius:2px; }
+  .report-card-fill { height:100%; transition:width 1s 0.4s ease; width:0%; }
+  .report-card.low .report-card-fill { background:var(--green); }
+  .report-card.moderate .report-card-fill { background:var(--yellow); }
+  .report-card.high .report-card-fill { background:var(--red); }
+  .summary-box { background:var(--card); border:1px solid var(--border); padding:32px 36px; margin-bottom:28px; }
+  .summary-label { font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:0.2em; text-transform:uppercase; color:var(--accent); margin-bottom:14px; }
+  .summary-text { font-family:'Syne',sans-serif; font-size:clamp(16px,2.5vw,22px); font-weight:600; line-height:1.5; }
+  .insights-section { margin-bottom:32px; }
+  .insights-section h3 { font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.15em; text-transform:uppercase; color:var(--accent2); margin-bottom:16px; }
+  .insight-item { display:flex; gap:16px; padding:14px 0; border-bottom:1px solid var(--border); font-size:14px; line-height:1.6; color:var(--text); }
+  .insight-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; margin-top:6px; }
+
+  /* PAYWALL */
+  .blur-overlay { position:fixed; inset:0; backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); background:rgba(13,15,20,0.7); display:flex; align-items:center; justify-content:center; z-index:100; }
+  .paywall-card { background:var(--card); border:1px solid var(--border); padding:48px 40px; text-align:center; max-width:440px; width:100%; margin:24px; position:relative; overflow:hidden; }
+  .paywall-card::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; background:linear-gradient(90deg,var(--accent),var(--accent2)); }
+  .paywall-icon { font-size:32px; margin-bottom:20px; display:block; }
+  .paywall-card h2 { font-family:'Syne',sans-serif; font-size:26px; font-weight:800; margin-bottom:12px; }
+  .paywall-card p { font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--muted); line-height:1.9; margin-bottom:28px; }
+  .paywall-price { font-family:'Syne',sans-serif; font-size:52px; font-weight:800; background:linear-gradient(135deg,var(--accent),var(--accent2)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+  .paywall-price-note { font-family:'IBM Plex Mono',monospace; font-size:10px; color:var(--muted); letter-spacing:0.12em; margin-bottom:28px; margin-top:4px; }
+  .pay-btn { background:linear-gradient(135deg,var(--accent),var(--accent2)); color:white; border:none; padding:16px 40px; font-family:'Syne',sans-serif; font-size:15px; font-weight:700; cursor:pointer; width:100%; transition:opacity 0.2s; margin-bottom:10px; }
+  .pay-btn:hover { opacity:0.85; }
+  .test-btn { background:transparent; color:rgba(232,234,240,0.25); border:1px solid rgba(232,234,240,0.1); padding:10px 40px; font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:0.1em; cursor:pointer; width:100%; transition:all 0.2s; margin-bottom:16px; }
+  .test-btn:hover { color:rgba(232,234,240,0.5); border-color:rgba(232,234,240,0.25); }
+  .paywall-footnote { font-family:'IBM Plex Mono',monospace; font-size:10px; color:var(--muted); opacity:0.5; letter-spacing:0.08em; }
+
+  @keyframes fadeUp { from { opacity:0; transform:translateY(22px); } to { opacity:1; transform:none; } }
+</style>
+</head>
+<body>
+
+<!-- ══ LANDING ══ -->
+<section id="landing">
+  <div class="glow glow-1"></div>
+  <div class="glow glow-2"></div>
+  <div class="chip">MindScreen™ — Clinical Screening Tool</div>
+  <h1 class="landing-headline">Know what's<br><span class="grad">actually going on</span><br>in your mind.</h1>
+  <p class="landing-sub">
+    Clinically-validated screening questions used by psychologists and mental health professionals in the US.
+    Not a diagnosis — a starting point for self-awareness.
+  </p>
+  <div class="tags">
+    <span class="tag">ADHD · ASRS v1.1</span>
+    <span class="tag">Anxiety · GAD-7</span>
+    <span class="tag">Depression · PHQ-9</span>
+    <span class="tag">Burnout</span>
+    <span class="tag">PTSD / Trauma · PCL-5</span>
+    <span class="tag">OCD · OCI-R</span>
+    <span class="tag">Social Anxiety · SPIN</span>
+  </div>
+  <div class="disclaimer-block">
+    <p>
+      <strong>Important:</strong> This tool uses questions from validated clinical instruments. Results are
+      <strong>screening indicators only</strong> — not a medical diagnosis. If your results indicate
+      elevated symptoms, please consult a licensed mental health professional.
+    </p>
+  </div>
+  <button class="cta-btn" onclick="startTest()">Begin Screening</button>
+  <p class="sub-note">≈ 10 minutes · 49 questions · 7 conditions screened</p>
+</section>
+
+<!-- ══ SECTION TRANSITION ══ -->
+<section id="section-transition">
+  <div class="section-icon" id="transition-icon">🧠</div>
+  <h2 id="transition-title">Next Section</h2>
+  <p id="transition-sub">Moving to the next screening section.</p>
+  <button class="cta-btn" onclick="continueSection()">Continue →</button>
+</section>
+
+<!-- ══ QUESTIONNAIRE ══ -->
+<section id="questionnaire">
+  <div class="q-header">
+    <div class="q-logo">MindScreen™</div>
+    <div class="q-progress-wrap">
+      <div class="q-progress-label">
+        <span id="q-label">Question 1</span>
+        <span id="q-pct">0%</span>
+      </div>
+      <div class="q-progress-bar"><div class="q-progress-fill" id="q-fill"></div></div>
+    </div>
+    <div class="q-section-label" id="q-section-label">ADHD</div>
+  </div>
+  <div class="q-body">
+    <div class="q-scale-hint" id="q-scale-hint"></div>
+    <div class="q-category" id="q-category"></div>
+    <div class="q-question" id="q-question"></div>
+    <div class="q-subtext" id="q-subtext"></div>
+    <div class="options-grid" id="options-grid"></div>
+  </div>
+</section>
+
+<!-- ══ RESULTS ══ -->
+<section id="results">
+  <div class="results-inner">
+    <div class="results-header">
+      <div class="chip" style="display:inline-block;">Screening Complete</div>
+      <h2 class="results-title">Your <span class="grad">MindScreen</span> Report</h2>
+    </div>
+    <div class="report-grid" id="report-grid"></div>
+    <div class="summary-box">
+      <div class="summary-label">Clinical Summary</div>
+      <div class="summary-text" id="summary-text"></div>
+    </div>
+    <div class="insights-section">
+      <h3>Key Observations</h3>
+      <div id="insights-list"></div>
+    </div>
+    <div class="disclaimer-block" style="margin-top:24px;">
+      <p>
+        <strong>Remember:</strong> These results are screening indicators based on self-reported symptoms.
+        Only a licensed mental health professional can provide a clinical diagnosis.
+        If you are in crisis, please contact the <strong>988 Suicide & Crisis Lifeline</strong> by calling or texting <strong>988</strong>.
+      </p>
+    </div>
+  </div>
+
+  <!-- PAYWALL -->
+  <div class="blur-overlay" id="paywall">
+    <div class="paywall-card">
+      <span class="paywall-icon">🔒</span>
+      <h2>Your report is ready.</h2>
+      <p>
+        Your screening results across 7 conditions have been scored using
+        clinically validated instruments. Unlock your full report to see
+        where you fall on each scale and what it means.
+      </p>
+      <div class="paywall-price">$4.99</div>
+      <div class="paywall-price-note">ONE-TIME · INSTANT ACCESS · NO SUBSCRIPTION</div>
+      <button class="pay-btn" onclick="handlePayment()">Unlock My Full Report →</button>
+      <button class="test-btn" onclick="revealResults()">[ Preview — testing mode ]</button>
+      <div class="paywall-footnote">Secure checkout via Paddle · Results never stored</div>
+    </div>
+  </div>
+</section>
+
+<script>
+// ═══════════════════════════════════════
+// QUESTION BANK — clinically sourced
+// ═══════════════════════════════════════
+
+const sections = [
+  {
+    id: 'adhd',
+    label: 'ADHD',
+    icon: '⚡',
+    name: 'ADHD',
+    source: 'ASRS v1.1 (WHO/NIH)',
+    intro: 'ADHD Screening',
+    introSub: 'Based on the Adult ADHD Self-Report Scale (ASRS v1.1), developed by the WHO and NIH.',
+    scaleHint: 'How often do the following apply to you?',
+    options: [
+      { text: 'Never', score: 0 },
+      { text: 'Rarely', score: 1 },
+      { text: 'Sometimes', score: 2 },
+      { text: 'Often', score: 3 },
+      { text: 'Very Often', score: 4 }
+    ],
+    maxScore: 24,
+    thresholds: { low: 8, moderate: 16 },
+    questions: [
+      { q: 'How often do you have trouble wrapping up the final details of a project, once the challenging parts have been done?', sub: '' },
+      { q: 'How often do you have difficulty getting things in order when you have to do a task that requires organization?', sub: '' },
+      { q: 'How often do you have problems remembering appointments or obligations?', sub: '' },
+      { q: 'When you have a task that requires a lot of thought, how often do you avoid or delay getting started?', sub: '' },
+      { q: 'How often do you fidget or squirm with your hands or feet when you have to sit down for a long time?', sub: '' },
+      { q: 'How often do you feel overly active and compelled to do things, like you were driven by a motor?', sub: '' }
+    ]
+  },
+  {
+    id: 'anxiety',
+    label: 'Anxiety',
+    icon: '😰',
+    name: 'Anxiety',
+    source: 'GAD-7',
+    intro: 'Anxiety Screening',
+    introSub: 'Based on the GAD-7, the gold-standard anxiety screening tool used in clinical practice worldwide.',
+    scaleHint: 'Over the last 2 weeks, how often have you been bothered by the following?',
+    options: [
+      { text: 'Not at all', score: 0 },
+      { text: 'Several days', score: 1 },
+      { text: 'More than half the days', score: 2 },
+      { text: 'Nearly every day', score: 3 }
+    ],
+    maxScore: 21,
+    thresholds: { low: 5, moderate: 10 },
+    questions: [
+      { q: 'Feeling nervous, anxious, or on edge', sub: '' },
+      { q: 'Not being able to stop or control worrying', sub: '' },
+      { q: 'Worrying too much about different things', sub: '' },
+      { q: 'Trouble relaxing', sub: '' },
+      { q: 'Being so restless that it\'s hard to sit still', sub: '' },
+      { q: 'Becoming easily annoyed or irritable', sub: '' },
+      { q: 'Feeling afraid as if something awful might happen', sub: '' }
+    ]
+  },
+  {
+    id: 'depression',
+    label: 'Depression',
+    icon: '🌧️',
+    name: 'Depression',
+    source: 'PHQ-9',
+    intro: 'Depression Screening',
+    introSub: 'Based on the PHQ-9, the most widely used depression screening tool in the US healthcare system.',
+    scaleHint: 'Over the last 2 weeks, how often have you been bothered by the following?',
+    options: [
+      { text: 'Not at all', score: 0 },
+      { text: 'Several days', score: 1 },
+      { text: 'More than half the days', score: 2 },
+      { text: 'Nearly every day', score: 3 }
+    ],
+    maxScore: 27,
+    thresholds: { low: 5, moderate: 10 },
+    questions: [
+      { q: 'Little interest or pleasure in doing things', sub: '' },
+      { q: 'Feeling down, depressed, or hopeless', sub: '' },
+      { q: 'Trouble falling or staying asleep, or sleeping too much', sub: '' },
+      { q: 'Feeling tired or having little energy', sub: '' },
+      { q: 'Poor appetite or overeating', sub: '' },
+      { q: 'Feeling bad about yourself — or that you are a failure or have let yourself or your family down', sub: '' },
+      { q: 'Trouble concentrating on things, such as reading the newspaper or watching television', sub: '' },
+      { q: 'Moving or speaking so slowly that other people could have noticed — or being so fidgety or restless that you have been moving a lot more than usual', sub: '' },
+      { q: 'Thoughts that you would be better off dead, or of hurting yourself in some way', sub: 'This is a standard clinical question. Your response is private.' }
+    ]
+  },
+  {
+    id: 'ptsd',
+    label: 'PTSD / Trauma',
+    icon: '🛡️',
+    name: 'PTSD / Trauma',
+    source: 'PCL-5 (VA)',
+    intro: 'Trauma & PTSD Screening',
+    introSub: 'Based on the PCL-5, developed by the US Department of Veterans Affairs (VA) — the standard PTSD screening tool.',
+    scaleHint: 'In the past month, how much have you been bothered by the following?',
+    options: [
+      { text: 'Not at all', score: 0 },
+      { text: 'A little bit', score: 1 },
+      { text: 'Moderately', score: 2 },
+      { text: 'Quite a bit', score: 3 },
+      { text: 'Extremely', score: 4 }
+    ],
+    maxScore: 28,
+    thresholds: { low: 11, moderate: 22 },
+    questions: [
+      { q: 'Repeated, disturbing, and unwanted memories of a stressful experience from the past', sub: '' },
+      { q: 'Avoiding memories, thoughts, or feelings related to a stressful experience', sub: '' },
+      { q: 'Feeling distant or cut off from other people', sub: '' },
+      { q: 'Feeling irritable or having angry outbursts', sub: '' },
+      { q: 'Being "super alert" or watchful or on guard when there was no need to be', sub: '' },
+      { q: 'Feeling jumpy or easily startled', sub: '' },
+      { q: 'Having difficulty concentrating', sub: '' }
+    ]
+  },
+  {
+    id: 'burnout',
+    label: 'Burnout',
+    icon: '🔥',
+    name: 'Burnout',
+    source: 'Maslach Burnout Inventory (adapted)',
+    intro: 'Burnout Screening',
+    introSub: 'Based on the Maslach Burnout Inventory — the most widely used burnout assessment in clinical and occupational psychology.',
+    scaleHint: 'How often do you experience the following?',
+    options: [
+      { text: 'Never', score: 0 },
+      { text: 'A few times a year', score: 1 },
+      { text: 'Monthly', score: 2 },
+      { text: 'Weekly', score: 3 },
+      { text: 'Daily', score: 4 }
+    ],
+    maxScore: 24,
+    thresholds: { low: 8, moderate: 16 },
+    questions: [
+      { q: 'I feel emotionally drained by my work or responsibilities', sub: '' },
+      { q: 'I feel used up at the end of a workday', sub: '' },
+      { q: 'I feel fatigued when I get up in the morning and have to face another day', sub: '' },
+      { q: 'I have become less interested in my work since I started this job', sub: '' },
+      { q: 'I have become less enthusiastic about my work', sub: '' },
+      { q: 'I feel I am making an effective contribution to what my organization does', sub: 'Reverse scored — feeling effective is a protective factor.' }
+    ]
+  },
+  {
+    id: 'ocd',
+    label: 'OCD',
+    icon: '🔄',
+    name: 'OCD Tendencies',
+    source: 'OCI-R (Foa et al.)',
+    intro: 'OCD Tendency Screening',
+    introSub: 'Based on the Obsessive Compulsive Inventory – Revised (OCI-R), a validated tool used in clinical settings.',
+    scaleHint: 'How much have the following experiences distressed or bothered you?',
+    options: [
+      { text: 'Not at all', score: 0 },
+      { text: 'A little', score: 1 },
+      { text: 'Moderately', score: 2 },
+      { text: 'A lot', score: 3 },
+      { text: 'Extremely', score: 4 }
+    ],
+    maxScore: 20,
+    thresholds: { low: 6, moderate: 14 },
+    questions: [
+      { q: 'Unpleasant thoughts come into my mind against my will and I cannot get rid of them', sub: '' },
+      { q: 'I feel compelled to count while I am doing things', sub: '' },
+      { q: 'I collect things I don\'t need', sub: '' },
+      { q: 'I check things more often than necessary', sub: '' },
+      { q: 'I get upset if objects are not arranged properly', sub: '' }
+    ]
+  },
+  {
+    id: 'social_anxiety',
+    label: 'Social Anxiety',
+    icon: '👥',
+    name: 'Social Anxiety',
+    source: 'SPIN (Connor et al.)',
+    intro: 'Social Anxiety Screening',
+    introSub: 'Based on the Social Phobia Inventory (SPIN), a clinically validated tool for social anxiety disorder.',
+    scaleHint: 'How much have the following bothered you over the past week?',
+    options: [
+      { text: 'Not at all', score: 0 },
+      { text: 'A little bit', score: 1 },
+      { text: 'Somewhat', score: 2 },
+      { text: 'Very much', score: 3 },
+      { text: 'Extremely', score: 4 }
+    ],
+    maxScore: 20,
+    thresholds: { low: 7, moderate: 13 },
+    questions: [
+      { q: 'I am afraid of people in authority', sub: '' },
+      { q: 'Being embarrassed or looking stupid are among my worst fears', sub: '' },
+      { q: 'I avoid talking to people I don\'t know', sub: '' },
+      { q: 'I would do anything to avoid being criticized', sub: '' },
+      { q: 'Heart palpitations bother me when I am around people', sub: '' }
+    ]
+  }
+];
+
+// ═══════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════
+let currentSectionIdx = 0;
+let currentQ = 0;
+let sectionScores = {};
+let allAnswers = {};
+let totalQuestions = sections.reduce(function(a,s){ return a + s.questions.length; }, 0);
+let globalQIdx = 0;
+
+// ═══════════════════════════════════════
+// FLOW
+// ═══════════════════════════════════════
+function startTest() {
+  document.getElementById('landing').style.display = 'none';
+  currentSectionIdx = 0;
+  currentQ = 0;
+  globalQIdx = 0;
+  showSectionTransition(0, true);
+}
+
+function showSectionTransition(idx, isFirst) {
+  var s = sections[idx];
+  document.getElementById('questionnaire').style.display = 'none';
+  document.getElementById('section-transition').style.display = 'flex';
+  document.getElementById('transition-icon').textContent = s.icon;
+  document.getElementById('transition-title').textContent = s.intro;
+  document.getElementById('transition-sub').textContent = s.introSub + '\n\n' + s.questions.length + ' questions in this section.';
+}
+
+function continueSection() {
+  document.getElementById('section-transition').style.display = 'none';
+  document.getElementById('questionnaire').style.display = 'block';
+  currentQ = 0;
+  showQuestion();
+}
+
+function showQuestion() {
+  var s = sections[currentSectionIdx];
+  var q = s.questions[currentQ];
+  var pct = Math.round((globalQIdx / totalQuestions) * 100);
+
+  document.getElementById('q-label').textContent = 'Question ' + (globalQIdx + 1) + ' of ' + totalQuestions;
+  document.getElementById('q-pct').textContent = pct + '%';
+  document.getElementById('q-fill').style.width = pct + '%';
+  document.getElementById('q-section-label').textContent = s.label;
+  document.getElementById('q-scale-hint').textContent = s.scaleHint;
+  document.getElementById('q-category').textContent = s.name + ' · ' + s.source;
+
+  var qEl = document.getElementById('q-question');
+  var subEl = document.getElementById('q-subtext');
+  var grid = document.getElementById('options-grid');
+
+  qEl.classList.remove('visible');
+  subEl.classList.remove('visible');
+  grid.classList.remove('visible');
+
+  setTimeout(function() {
+    qEl.textContent = q.q;
+    subEl.textContent = q.sub || '';
+    grid.innerHTML = '';
+
+    var letters = ['A','B','C','D','E'];
+    s.options.forEach(function(opt, i) {
+      var btn = document.createElement('button');
+      btn.className = 'option-btn';
+      btn.innerHTML = '<span class="option-letter">' + letters[i] + '</span><span>' + opt.text + '</span>';
+      btn.onclick = function() { selectAnswer(opt.score, btn); };
+      grid.appendChild(btn);
+    });
+
+    requestAnimationFrame(function() {
+      qEl.classList.add('visible');
+      subEl.classList.add('visible');
+      grid.classList.add('visible');
+    });
+  }, 180);
+}
+
+function selectAnswer(score, btnEl) {
+  document.querySelectorAll('.option-btn').forEach(function(b){ b.classList.remove('selected'); });
+  btnEl.classList.add('selected');
+
+  setTimeout(function() {
+    var s = sections[currentSectionIdx];
+    if (!allAnswers[s.id]) allAnswers[s.id] = [];
+    allAnswers[s.id][currentQ] = score;
+
+    currentQ++;
+    globalQIdx++;
+
+    if (currentQ >= s.questions.length) {
+      // Score this section
+      var total = allAnswers[s.id].reduce(function(a,b){ return a+b; }, 0);
+      sectionScores[s.id] = total;
+
+      currentSectionIdx++;
+      if (currentSectionIdx >= sections.length) {
+        document.getElementById('questionnaire').style.display = 'none';
+        showResults();
+      } else {
+        showSectionTransition(currentSectionIdx, false);
+      }
+    } else {
+      showQuestion();
+    }
+  }, 320);
+}
+
+// ═══════════════════════════════════════
+// RESULTS
+// ═══════════════════════════════════════
+function getLevel(score, thresholds) {
+  if (score < thresholds.low) return 'low';
+  if (score < thresholds.moderate) return 'moderate';
+  return 'high';
+}
+
+function getLevelLabel(level) {
+  if (level === 'low') return 'Minimal';
+  if (level === 'moderate') return 'Moderate';
+  return 'Elevated';
+}
+
+function getInsights(s, score, level) {
+  var insights = {
+    adhd: {
+      low: { text: 'ADHD symptoms are not significantly indicated. Attention and executive function appear within typical range.', color: 'var(--green)' },
+      moderate: { text: 'Some ADHD-related patterns detected. Difficulties with organization, follow-through, or restlessness may be present.', color: 'var(--yellow)' },
+      high: { text: 'ADHD symptoms are significantly elevated. Consider a professional evaluation — adult ADHD is commonly underdiagnosed.', color: 'var(--red)' }
+    },
+    anxiety: {
+      low: { text: 'Anxiety levels are minimal. Worry and nervous tension do not appear to be significantly impairing daily function.', color: 'var(--green)' },
+      moderate: { text: 'Moderate anxiety detected. Persistent worry, restlessness, or irritability may be affecting daily life.', color: 'var(--yellow)' },
+      high: { text: 'Anxiety is significantly elevated. GAD-7 scores in this range typically indicate clinical-level anxiety disorder.', color: 'var(--red)' }
+    },
+    depression: {
+      low: { text: 'Depression symptoms are minimal. Mood and energy appear within a healthy functional range.', color: 'var(--green)' },
+      moderate: { text: 'Moderate depressive symptoms detected. PHQ-9 scores here suggest mild to moderate depression warranting attention.', color: 'var(--yellow)' },
+      high: { text: 'Depression symptoms are significantly elevated. PHQ-9 scores in this range indicate moderate-to-severe depression. Professional support is strongly recommended.', color: 'var(--red)' }
+    },
+    ptsd: {
+      low: { text: 'Trauma-related symptoms are minimal. No significant PTSD indicators detected based on PCL-5 responses.', color: 'var(--green)' },
+      moderate: { text: 'Some trauma-related symptoms present. Avoidance, hypervigilance, or intrusive memories may be present at a subclinical level.', color: 'var(--yellow)' },
+      high: { text: 'PTSD symptoms are significantly elevated. PCL-5 scores in this range suggest a clinical-level trauma response. A mental health professional can help.', color: 'var(--red)' }
+    },
+    burnout: {
+      low: { text: 'Burnout indicators are low. Emotional energy and engagement with responsibilities appear healthy.', color: 'var(--green)' },
+      moderate: { text: 'Moderate burnout detected. Emotional exhaustion and disengagement are present and may worsen without intervention.', color: 'var(--yellow)' },
+      high: { text: 'Severe burnout indicators. Chronic emotional exhaustion, depersonalization, and reduced efficacy are significantly present.', color: 'var(--red)' }
+    },
+    ocd: {
+      low: { text: 'OCD-related tendencies are minimal. Intrusive thoughts and compulsive behaviors are not significantly indicated.', color: 'var(--green)' },
+      moderate: { text: 'Some OCD-related tendencies detected. Checking behaviors, intrusive thoughts, or ordering compulsions may be present.', color: 'var(--yellow)' },
+      high: { text: 'OCD tendencies are significantly elevated. OCI-R scores here suggest clinically relevant obsessive-compulsive symptoms.', color: 'var(--red)' }
+    },
+    social_anxiety: {
+      low: { text: 'Social anxiety is minimal. Fear of judgment, embarrassment, or social avoidance are not significantly present.', color: 'var(--green)' },
+      moderate: { text: 'Moderate social anxiety detected. Some fear of criticism or avoidance of unfamiliar social situations may be affecting daily life.', color: 'var(--yellow)' },
+      high: { text: 'Social anxiety is significantly elevated. SPIN scores here align with Social Anxiety Disorder. Professional support can be highly effective.', color: 'var(--red)' }
+    }
+  };
+  return insights[s.id][level];
+}
+
+function getSummary(results) {
+  var highCount = results.filter(function(r){ return r.level === 'high'; }).length;
+  var modCount = results.filter(function(r){ return r.level === 'moderate'; }).length;
+  var highNames = results.filter(function(r){ return r.level === 'high'; }).map(function(r){ return r.name; });
+  var modNames = results.filter(function(r){ return r.level === 'moderate'; }).map(function(r){ return r.name; });
+
+  if (highCount === 0 && modCount === 0) {
+    return 'All screening indicators are within the minimal range. No conditions show clinically elevated symptoms based on your responses. Continue to monitor your wellbeing — mental health is not static.';
+  }
+  if (highCount >= 3) {
+    return 'Multiple conditions show elevated indicators: ' + highNames.join(', ') + '. A comprehensive mental health evaluation is strongly recommended. These results suggest that professional support could significantly improve your quality of life.';
+  }
+  if (highCount > 0) {
+    return highNames.join(' and ') + ' show elevated symptoms. ' + (modCount > 0 ? modNames.join(', ') + ' also show moderate indicators. ' : '') + 'Consider reaching out to a mental health professional for evaluation and support.';
+  }
+  return modNames.join(', ') + ' show moderate symptom levels. While not yet at clinical threshold, these patterns are worth monitoring and addressing proactively.';
+}
+
+function showResults() {
+  document.getElementById('results').style.display = 'block';
+  window.scrollTo(0, 0);
+
+  var results = sections.map(function(s) {
+    var score = sectionScores[s.id] || 0;
+    var level = getLevel(score, s.thresholds);
+    return { id: s.id, name: s.name, score: score, maxScore: s.maxScore, level: level };
+  });
+
+  // Render report cards
+  var grid = document.getElementById('report-grid');
+  grid.innerHTML = '';
+  results.forEach(function(r) {
+    var pct = Math.round((r.score / r.maxScore) * 100);
+    var card = document.createElement('div');
+    card.className = 'report-card ' + r.level;
+    card.innerHTML =
+      '<div class="report-card-label">' + r.name + '</div>' +
+      '<div class="report-card-score">' + r.score + '<span style="font-size:16px;opacity:0.4">/' + r.maxScore + '</span></div>' +
+      '<div class="report-card-level">' + getLevelLabel(r.level) + '</div>' +
+      '<div class="report-card-bar"><div class="report-card-fill" data-w="' + pct + '" style="width:0%"></div></div>';
+    grid.appendChild(card);
+  });
+
+  // Summary
+  document.getElementById('summary-text').textContent = getSummary(results);
+
+  // Insights
+  var list = document.getElementById('insights-list');
+  list.innerHTML = '';
+  results.forEach(function(r) {
+    var s = sections.find(function(sec){ return sec.id === r.id; });
+    var insight = getInsights(s, r.score, r.level);
+    var el = document.createElement('div');
+    el.className = 'insight-item';
+    el.innerHTML =
+      '<div class="insight-dot" style="background:' + insight.color + '"></div>' +
+      '<span><strong>' + r.name + ':</strong> ' + insight.text + '</span>';
+    list.appendChild(el);
+  });
+
+  // Animate bars
+  setTimeout(function() {
+    document.querySelectorAll('.report-card-fill').forEach(function(el) {
+      el.style.width = el.getAttribute('data-w') + '%';
+    });
+  }, 200);
+}
+
+function handlePayment() {
+  // TODO: Replace with your Paddle payment link
+  alert('Paddle integration coming soon. Use preview mode to test.');
+}
+
+function revealResults() {
+  document.getElementById('paywall').style.display = 'none';
+}
+</script>
+</body>
+</html>
