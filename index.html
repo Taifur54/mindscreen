@@ -7,6 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=IBM+Plex+Mono:wght@300;400;500&family=IBM+Plex+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdn.paddle.com/paddle/v2/paddle.js"></script>
 <style>
   :root {
     --bg: #0D0F14; --surface: #13161E; --card: #1A1E28; --border: #252A38;
@@ -824,7 +825,32 @@ function downloadPDF(){
   doc.save('MindScreen-Report-'+new Date().toISOString().slice(0,10)+'.pdf');
 }
 
-function handlePayment(){ alert('Paddle integration coming soon. Use preview mode to test.'); }
+// ── PADDLE PAYMENT ──
+Paddle.Initialize({
+  token: 'live_b11623814bbbd735d8bea052eb9',
+  eventCallback: function(event) {
+    if (event.name === 'checkout.completed') {
+      revealResults();
+    }
+  }
+});
+
+var PRICES = {
+  general: 'pri_01kjv0qvf69fmrv2zx1hqxahe2', // $7.99
+  deep:    'pri_01kjv0sprejez3sz6gk0xfhq29'   // $4.99
+};
+
+function handlePayment(){
+  var priceId = (mode === 'general') ? PRICES.general : PRICES.deep;
+  Paddle.Checkout.open({
+    items: [{ priceId: priceId, quantity: 1 }],
+    settings: {
+      displayMode: 'overlay',
+      theme: 'dark',
+      locale: 'en'
+    }
+  });
+}
 function revealResults(){ document.getElementById('paywall').style.display='none'; }
 
 // Handle browser back/forward via hashchange
