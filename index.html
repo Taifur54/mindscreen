@@ -282,7 +282,7 @@
 </section>
 
 <!-- FOOTER -->
-<footer id="site-footer" style="display:none;background:var(--surface);border-top:1px solid var(--border);padding:24px;text-align:center;">
+<footer id="site-footer" style="background:var(--surface);border-top:1px solid var(--border);padding:24px;text-align:center;">
   <div style="display:flex;justify-content:center;gap:28px;flex-wrap:wrap;">
     <span onclick="showPolicy('terms')" style="font-family:'IBM Plex Sans',sans-serif;font-size:12px;color:var(--muted);cursor:pointer;transition:color 0.2s;" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--muted)'">Terms of Service</span>
     <span onclick="showPolicy('privacy')" style="font-family:'IBM Plex Sans',sans-serif;font-size:12px;color:var(--muted);cursor:pointer;transition:color 0.2s;" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--muted)'">Privacy Policy</span>
@@ -298,6 +298,8 @@
     <div id="policy-content"></div>
   </div>
 </div>
+
+<script>
 var DD = [
   { id:'adhd', icon:'⚡', name:'ADHD', source:'ASRS v1.1 + DSM-5', desc:'Executive function, attention, hyperactivity, impulsivity — inattentive and hyperactive subtypes.',
     hint:'How often do the following apply to you?',
@@ -517,7 +519,7 @@ var allSections = ['landing','mode-select','section-transition','questionnaire',
 function showSection(id){
   allSections.forEach(function(s){ document.getElementById(s).style.display='none'; });
   document.getElementById(id).style.display = (id==='section-transition') ? 'flex' : 'block';
-  document.getElementById('site-footer').style.display = (id==='landing') ? 'none' : 'block';
+  document.getElementById('site-footer').style.display = 'block';
   window.scrollTo(0,0);
 }
 
@@ -843,12 +845,16 @@ function downloadPDF(){
 }
 
 // ── PADDLE PAYMENT ──
-Paddle.Initialize({
-  token: 'live_b11623814bbbd735d8bea052eb9',
-  eventCallback: function(event) {
-    if (event.name === 'checkout.completed') {
-      revealResults();
-    }
+window.addEventListener('load', function(){
+  if(typeof Paddle !== 'undefined'){
+    Paddle.Initialize({
+      token: 'live_b11623814bbbd735d8bea052eb9',
+      eventCallback: function(event) {
+        if (event.name === 'checkout.completed') {
+          revealResults();
+        }
+      }
+    });
   }
 });
 
@@ -914,63 +920,49 @@ window.location.hash = '#home';
 var policies = {
   terms: {
     title: 'Terms of Service',
-    body: `<p style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--muted);margin-bottom:24px;">Last updated: March 2025</p>
-<h3 style="font-family:'Syne',sans-serif;font-size:15px;font-weight:700;margin-bottom:8px;margin-top:20px;">1. Acceptance of Terms</h3>
-<p>By accessing or using MindScreen ("the Service") at mindscreen.us, you agree to be bound by these Terms of Service. If you do not agree, please do not use the Service.</p>
-<h3 style="font-family:'Syne',sans-serif;font-size:15px;font-weight:700;margin-bottom:8px;margin-top:20px;">2. Not a Medical Service</h3>
-<p>MindScreen is a self-assessment screening tool only. It is not a medical device, clinical diagnostic tool, or substitute for professional mental health care. Results are screening indicators only and do not constitute a diagnosis. Always consult a licensed mental health professional for clinical advice.</p>
-<h3 style="font-family:'Syne',sans-serif;font-size:15px;font-weight:700;margin-bottom:8px;margin-top:20px;">3. Use of Service</h3>
-<p>You must be 18 years or older to use this Service. You agree to use MindScreen for personal, non-commercial purposes only. You may not reproduce, distribute, or resell any part of the Service or its outputs.</p>
-<h3 style="font-family:'Syne',sans-serif;font-size:15px;font-weight:700;margin-bottom:8px;margin-top:20px;">4. Payments</h3>
-<p>Payments are processed securely by Paddle.com. By completing a purchase, you agree to Paddle's terms of service. MindScreen charges a one-time fee per screening report. No subscriptions are created.</p>
-<h3 style="font-family:'Syne',sans-serif;font-size:15px;font-weight:700;margin-bottom:8px;margin-top:20px;">5. Intellectual Property</h3>
-<p>All content, design, and code on MindScreen is owned by MindScreen and protected by applicable intellectual property laws. The validated clinical instruments used are referenced for screening purposes only.</p>
-<h3 style="font-family:'Syne',sans-serif;font-size:15px;font-weight:700;margin-bottom:8px;margin-top:20px;">6. Limitation of Liability</h3>
-<p>MindScreen is provided "as is." We are not liable for any decisions made based on screening results, or for any damages arising from use of the Service. In no event shall liability exceed the amount paid for the report.</p>
-<h3 style="font-family:'Syne',sans-serif;font-size:15px;font-weight:700;margin-bottom:8px;margin-top:20px;">7. Changes to Terms</h3>
-<p>We reserve the right to update these terms at any time. Continued use of the Service after changes constitutes acceptance of the new terms.</p>
-<h3 style="font-family:'Syne',sans-serif;font-size:15px;font-weight:700;margin-bottom:8px;margin-top:20px;">8. Contact</h3>
-<p>For questions regarding these terms, contact us at: support@mindscreen.us</p>`
+    sections: [
+      ['Acceptance of Terms', 'By accessing or using MindScreen at mindscreen.us, you agree to be bound by these Terms of Service. If you do not agree, please do not use the Service.'],
+      ['Not a Medical Service', 'MindScreen is a self-assessment screening tool only. It is not a medical device, clinical diagnostic tool, or substitute for professional mental health care. Results are screening indicators only and do not constitute a diagnosis. Always consult a licensed mental health professional for clinical advice.'],
+      ['Use of Service', 'You must be 18 years or older to use this Service. You agree to use MindScreen for personal, non-commercial purposes only. You may not reproduce, distribute, or resell any part of the Service or its outputs.'],
+      ['Payments', 'Payments are processed securely by Paddle.com. By completing a purchase, you agree to Paddle\'s terms of service. MindScreen charges a one-time fee per screening report. No subscriptions are created.'],
+      ['Intellectual Property', 'All content, design, and code on MindScreen is owned by MindScreen and protected by applicable intellectual property laws.'],
+      ['Limitation of Liability', 'MindScreen is provided "as is." We are not liable for any decisions made based on screening results, or for any damages arising from use of the Service. In no event shall liability exceed the amount paid for the report.'],
+      ['Contact', 'For questions regarding these terms, contact us at: support@mindscreen.us']
+    ]
   },
   privacy: {
     title: 'Privacy Policy',
-    body: `<p style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--muted);margin-bottom:24px;">Last updated: March 2025</p>
-<h3 style="font-family:'Syne',sans-serif;font-size:15px;font-weight:700;margin-bottom:8px;margin-top:20px;">1. What We Collect</h3>
-<p>MindScreen does not collect, store, or transmit your screening answers or results. All questionnaire responses are processed entirely in your browser and are never sent to any server. We do not create user accounts or retain personal health data.</p>
-<p style="margin-top:10px;">When you make a payment, Paddle (our payment processor) collects your name, email address, and payment information. MindScreen receives only confirmation that a payment was completed.</p>
-<h3 style="font-family:'Syne',sans-serif;font-size:15px;font-weight:700;margin-bottom:8px;margin-top:20px;">2. Cookies & Analytics</h3>
-<p>MindScreen may use basic analytics (such as page view counts) to understand how the Service is used. No personally identifiable information is collected through analytics. Paddle may set cookies necessary for checkout functionality.</p>
-<h3 style="font-family:'Syne',sans-serif;font-size:15px;font-weight:700;margin-bottom:8px;margin-top:20px;">3. Your PDF Report</h3>
-<p>Your PDF report is generated locally in your browser and downloaded directly to your device. It is never uploaded to or stored on our servers. You are solely responsible for the storage and sharing of your report.</p>
-<h3 style="font-family:'Syne',sans-serif;font-size:15px;font-weight:700;margin-bottom:8px;margin-top:20px;">4. Third-Party Services</h3>
-<p>We use Paddle for payment processing. Paddle's privacy policy governs their handling of your payment data. We use Google Fonts for typography, which may log requests per Google's privacy policy.</p>
-<h3 style="font-family:'Syne',sans-serif;font-size:15px;font-weight:700;margin-bottom:8px;margin-top:20px;">5. Data Security</h3>
-<p>Because we do not store your health data, there is no health data at risk on our servers. Payment data is handled entirely by Paddle using industry-standard encryption.</p>
-<h3 style="font-family:'Syne',sans-serif;font-size:15px;font-weight:700;margin-bottom:8px;margin-top:20px;">6. Children's Privacy</h3>
-<p>MindScreen is not intended for users under 18 years of age. We do not knowingly collect data from minors.</p>
-<h3 style="font-family:'Syne',sans-serif;font-size:15px;font-weight:700;margin-bottom:8px;margin-top:20px;">7. Contact</h3>
-<p>For privacy-related questions, contact us at: support@mindscreen.us</p>`
+    sections: [
+      ['What We Collect', 'MindScreen does not collect, store, or transmit your screening answers or results. All questionnaire responses are processed entirely in your browser and are never sent to any server. We do not create user accounts or retain personal health data. When you make a payment, Paddle collects your name, email, and payment information. MindScreen receives only confirmation that a payment was completed.'],
+      ['Cookies & Analytics', 'MindScreen may use basic analytics to understand how the Service is used. No personally identifiable information is collected through analytics. Paddle may set cookies necessary for checkout functionality.'],
+      ['Your PDF Report', 'Your PDF report is generated locally in your browser and downloaded directly to your device. It is never uploaded to or stored on our servers. You are solely responsible for the storage and sharing of your report.'],
+      ['Third-Party Services', 'We use Paddle for payment processing. Paddle\'s privacy policy governs their handling of your payment data. We use Google Fonts for typography, which may log requests per Google\'s privacy policy.'],
+      ['Data Security', 'Because we do not store your health data, there is no health data at risk on our servers. Payment data is handled entirely by Paddle using industry-standard encryption.'],
+      ['Children\'s Privacy', 'MindScreen is not intended for users under 18 years of age. We do not knowingly collect data from minors.'],
+      ['Contact', 'For privacy-related questions, contact us at: support@mindscreen.us']
+    ]
   },
   refund: {
     title: 'Refund Policy',
-    body: `<p style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--muted);margin-bottom:24px;">Last updated: March 2025</p>
-<h3 style="font-family:'Syne',sans-serif;font-size:15px;font-weight:700;margin-bottom:8px;margin-top:20px;">Our Policy</h3>
-<p>MindScreen offers a <strong>7-day refund policy</strong> on all purchases. If you are not satisfied with your screening report for any reason, contact us within 7 days of purchase and we will issue a full refund — no questions asked.</p>
-<h3 style="font-family:'Syne',sans-serif;font-size:15px;font-weight:700;margin-bottom:8px;margin-top:20px;">How to Request a Refund</h3>
-<p>Email us at <strong>support@mindscreen.us</strong> with the subject line "Refund Request" and include the email address used at checkout. We will process your refund within 3–5 business days.</p>
-<h3 style="font-family:'Syne',sans-serif;font-size:15px;font-weight:700;margin-bottom:8px;margin-top:20px;">Exceptions</h3>
-<p>Refund requests made more than 7 days after the original purchase date will not be eligible. Refunds are issued to the original payment method only.</p>
-<h3 style="font-family:'Syne',sans-serif;font-size:15px;font-weight:700;margin-bottom:8px;margin-top:20px;">Digital Product Notice</h3>
-<p>MindScreen reports are digital products delivered instantly upon payment. Despite this, we still honour our 7-day refund window because we stand behind the quality of our product.</p>
-<h3 style="font-family:'Syne',sans-serif;font-size:15px;font-weight:700;margin-bottom:8px;margin-top:20px;">Contact</h3>
-<p>Refund questions: support@mindscreen.us</p>`
+    sections: [
+      ['Our Policy', 'MindScreen offers a 7-day refund policy on all purchases. If you are not satisfied with your screening report for any reason, contact us within 7 days of purchase and we will issue a full refund — no questions asked.'],
+      ['How to Request a Refund', 'Email us at support@mindscreen.us with the subject line "Refund Request" and include the email address used at checkout. We will process your refund within 3-5 business days.'],
+      ['Exceptions', 'Refund requests made more than 7 days after the original purchase date will not be eligible. Refunds are issued to the original payment method only.'],
+      ['Digital Product Notice', 'MindScreen reports are digital products delivered instantly upon payment. Despite this, we still honour our 7-day refund window because we stand behind the quality of our product.'],
+      ['Contact', 'Refund questions: support@mindscreen.us']
+    ]
   }
 };
 
 function showPolicy(type){
   var p = policies[type];
-  var content = document.getElementById('policy-content');
-  content.innerHTML = '<h2 style="font-family:\'Syne\',sans-serif;font-size:24px;font-weight:800;margin-bottom:20px;">'+p.title+'</h2><div style="font-family:\'IBM Plex Sans\',sans-serif;font-size:13px;color:#c8cdd8;line-height:1.9;">'+p.body+'</div>';
+  var html = '<h2 style="font-family:\'Syne\',sans-serif;font-size:22px;font-weight:800;margin-bottom:6px;color:var(--text);">'+p.title+'</h2>';
+  html += '<p style="font-family:\'IBM Plex Mono\',monospace;font-size:10px;color:var(--muted);margin-bottom:24px;letter-spacing:0.1em;">Last updated: March 2025</p>';
+  p.sections.forEach(function(s){
+    html += '<h3 style="font-family:\'Syne\',sans-serif;font-size:14px;font-weight:700;color:var(--accent);margin-top:20px;margin-bottom:6px;">'+s[0]+'</h3>';
+    html += '<p style="font-family:\'IBM Plex Sans\',sans-serif;font-size:13px;color:#c8cdd8;line-height:1.8;">'+s[1]+'</p>';
+  });
+  document.getElementById('policy-content').innerHTML = html;
   document.getElementById('policy-modal').style.display='block';
   document.body.style.overflow='hidden';
 }
@@ -980,7 +972,6 @@ function closePolicy(){
   document.body.style.overflow='';
 }
 
-// Close modal on backdrop click
 document.getElementById('policy-modal').addEventListener('click', function(e){
   if(e.target === this) closePolicy();
 });
